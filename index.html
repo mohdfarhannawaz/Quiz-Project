@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Quiz Project</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Quiz Project</h1>
+    <div id="quiz"></div>
+    <button id="submit">Submit Quiz</button>
+    <div id="results"></div>
+  </div>
+  <script>
+    const quizContainer = document.getElementById('quiz');
+    const submitButton = document.getElementById('submit');
+    const resultsContainer = document.getElementById('results');
+    const questions = [
+      {
+        question: "What is the capital of France?",
+        options: ["Paris", "Berlin", "London", "Madrid"],
+        answer: "Paris"
+      },
+      {
+        question: "What is the largest country in the world by land area?",
+        options: ["Russia", "China", "Canada", "United States"],
+        answer: "Russia"
+      },
+      {
+        question: "What is the currency of Japan?",
+        options: ["Yen", "Dollar", "Euro", "Pound"],
+        answer: "Yen"
+      },
+      {
+        question: "What is the largest ocean in the world?",
+        options: ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"],
+        answer: "Pacific Ocean"
+      },
+      {
+        question: "What is the highest mountain in the world?",
+        options: ["Mount Everest", "K2", "Makalu", "Lhotse"],
+        answer: "Mount Everest"
+      }
+    ];
+
+    function buildQuiz() {
+      const output = [];
+
+      questions.forEach((currentQuestion, questionNumber) => {
+        const options = [];
+
+        for (let i = 0; i < currentQuestion.options.length; i++) {
+          options.push(
+            `<label>
+              <input type="radio" name="question${questionNumber}" value="${currentQuestion.options[i]}">
+              ${currentQuestion.options[i]}
+            </label>`
+          );
+        }
+
+        output.push(
+          `<div class="question">${currentQuestion.question}</div>
+          <div class="options">${options.join('')}</div>`
+        );
+      });
+
+      quizContainer.innerHTML = output.join('');
+    }
+
+    function showResults() {
+      const answerContainers = quizContainer.querySelectorAll('.options');
+      let score = 0;
+
+      questions.forEach((currentQuestion, questionNumber) => {
+        const answerContainer = answerContainers[questionNumber];
+        const selector = `input[name=question${questionNumber}]:checked`;
+        const userAnswer = (answerContainer.querySelector(selector) || {}).value;
+
+        if (userAnswer === currentQuestion.answer) {
+          score++;
+          answerContainers[questionNumber].style.color = 'green';
+        } else {
+          answerContainers[questionNumber].style.color = 'red';
+        }
+      });
+
+      resultsContainer.innerHTML = `${score} out of ${questions.length}`;
+    }
+
+    buildQuiz();
+
+    submitButton.addEventListener('click', showResults);
+  </script>
+</body>
+</html>
